@@ -1,0 +1,73 @@
+@model DashboardStatsViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var maxSale = Model.SalesByDay.Any() ? Model.SalesByDay.Max(s => s.Total) : 1;
+}
+
+<div class="row g-4">
+    @foreach (var stat in new (string Icon, string Label, string Value, string Color)[]
+    {
+        ("bi-people", "Total Customers", Model.TotalCustomers.ToString(), "primary"),
+        ("bi-box-seam", "Total Products", Model.TotalProducts.ToString(), "success"),
+        ("bi-receipt", "Total Orders", Model.TotalOrders.ToString(), "warning"),
+        ("bi-cash-coin", "Total Revenue", "$" + Model.TotalRevenue.ToString("0.00"), "accent")
+    })
+    {
+        <div class="col-xl-3 col-md-6">
+            <div class="admin-stat-card stat-@stat.Color">
+                <div class="stat-icon"><i class="bi @stat.Icon"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">@stat.Value</span>
+                    <span class="stat-label">@stat.Label</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-lg-8">
+        <div class="admin-panel">
+            <h3>Sales (Last 7 Active Days)</h3>
+            @if (!Model.SalesByDay.Any())
+            {
+                <p class="text-muted">No sales recorded yet.</p>
+            }
+            else
+            {
+                <div class="sales-chart">
+                    @foreach (var s in Model.SalesByDay)
+                    {
+                        var heightPct = maxSale > 0 ? (s.Total / maxSale) * 100 : 0;
+                        <div class="sales-bar-col">
+                            <div class="sales-bar" style="height: @heightPct%"></div>
+                            <span class="sales-label">@s.Label</span>
+                            <span class="sales-value">$@s.Total.ToString("0")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-panel">
+            <h3>Low Stock Alert <span class="badge bg-danger-soft">@Model.LowStockCount</span></h3>
+            @if (!Model.LowStockProducts.Any())
+            {
+                <p class="text-muted">All products are well stocked.</p>
+            }
+            else
+            {
+                <ul class="low-stock-list">
+                    @foreach (var p in Model.LowStockProducts)
+                    {
+                        <li>
+                            <span>@p.ProductName</span>
+                            <span class="badge @(p.StockLevel == 0 ? "bg-danger-soft" : "bg-warning-soft")">@p.StockStatus (@p.StockLevel)</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>

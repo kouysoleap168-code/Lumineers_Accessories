@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Get in Touch</p>
+            <h2 class="section-title">Contact Us</h2>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="lumineers-card">
+                    <form asp-controller="Home" asp-action="Contact" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input name="Name" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input name="Email" type="email" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <input name="Subject" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea name="Message" rows="5" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-soft">Send Message</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="lumineers-card contact-info">
+                    <h4>Contact Information</h4>
+                    <p><i class="bi bi-envelope"></i> support@lumineersaccessories.com</p>
+                    <p><i class="bi bi-telephone"></i> +855 12 345 678</p>
+                    <p><i class="bi bi-geo-alt"></i> Phnom Penh, Cambodia</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

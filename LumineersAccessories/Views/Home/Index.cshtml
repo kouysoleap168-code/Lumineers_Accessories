@@ -1,0 +1,116 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+    var heroImage = "https://images.pexels.com/photos/3641059/pexels-photo-3641059.jpeg?auto=compress&cs=tinysrgb&h=650&w=940";
+    var categoryImages = new Dictionary<int, string>
+    {
+        { 1, "https://images.pexels.com/photos/3641056/pexels-photo-3641056.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 2, "https://images.pexels.com/photos/17368716/pexels-photo-17368716.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 3, "https://images.pexels.com/photos/2899839/pexels-photo-2899839.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 4, "https://images.pexels.com/photos/3214241/pexels-photo-3214241.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" }
+    };
+    var categoryTaglines = new Dictionary<int, string>
+    {
+        { 1, "Little details that complete your look." },
+        { 2, "Delicate pieces made to shine." },
+        { 3, "Simple elegance for every moment." },
+        { 4, "Small details, beautiful impact." }
+    };
+}
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-image" style="background-image: url('@heroImage');"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <p class="hero-eyebrow">Lumineers Accessories</p>
+        <h1 class="hero-title">Shine in Your Own Way.</h1>
+        <p class="hero-subtitle">Discover delicate accessories designed to make every moment a little brighter.</p>
+        <div class="hero-buttons">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary-soft">Shop Now</a>
+            <a asp-controller="Categories" asp-action="Index" class="btn btn-outline-soft">Explore Collection</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="section section-categories">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Collections</p>
+            <h2 class="section-title">Shop by Category</h2>
+        </div>
+        <div class="row g-4">
+            @foreach (var cat in Model.Categories)
+            {
+                var img = categoryImages.ContainsKey(cat.CategoryID) ? categoryImages[cat.CategoryID] : "";
+                var tagline = categoryTaglines.ContainsKey(cat.CategoryID) ? categoryTaglines[cat.CategoryID] : "";
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Categories" asp-action="Details" asp-route-id="@cat.CategoryID" class="category-card">
+                        <div class="category-image" style="background-image: url('@img');"></div>
+                        <div class="category-body">
+                            <h3>@cat.CategoryName</h3>
+                            <p>@tagline</p>
+                            <span class="category-link">Explore <i class="bi bi-arrow-right"></i></span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section section-products">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Best Sellers</p>
+            <h2 class="section-title">Featured Products</h2>
+        </div>
+        <div class="row g-4">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <div class="col-lg-3 col-md-6">
+                    <div class="product-card">
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID" class="product-image-link">
+                            <div class="product-image" style="background-image: url('@(product.ImageUrl)');"></div>
+                        </a>
+                        <div class="product-body">
+                            <span class="product-category">@product.Category?.CategoryName</span>
+                            <h3 class="product-name">
+                                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID">@product.ProductName</a>
+                            </h3>
+                            <div class="product-rating">
+                                @for (int i = 0; i < product.Rating; i++) { <i class="bi bi-star-fill"></i> }
+                                @for (int i = product.Rating; i < 5; i++) { <i class="bi bi-star"></i> }
+                            </div>
+                            <div class="product-price">$@product.Price.ToString("0.00")</div>
+                            <div class="product-actions">
+                                <form asp-controller="Products" asp-action="AddToCart" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-primary-soft btn-sm" title="Add to Cart"><i class="bi bi-bag-plus"></i></button>
+                                </form>
+                                <form asp-controller="Wishlist" asp-action="Add" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-soft btn-sm" title="Add to Wishlist"><i class="bi bi-heart"></i></button>
+                                </form>
+                                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID" class="btn btn-outline-soft btn-sm" title="View Details"><i class="bi bi-eye"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-center mt-4">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary-soft">View All Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Slogan banner -->
+<section class="slogan-banner">
+    <div class="container text-center">
+        <h2>Shine in Your Own Way.</h2>
+        <p>Discover delicate accessories designed to make every moment a little brighter.</p>
+    </div>
+</section>

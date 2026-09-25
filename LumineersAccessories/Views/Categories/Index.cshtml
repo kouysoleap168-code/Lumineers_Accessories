@@ -1,0 +1,45 @@
+@model List<Category>
+@{
+    ViewData["Title"] = "Categories";
+    var categoryImages = new Dictionary<int, string>
+    {
+        { 1, "https://images.pexels.com/photos/3641056/pexels-photo-3641056.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 2, "https://images.pexels.com/photos/17368716/pexels-photo-17368716.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 3, "https://images.pexels.com/photos/2899839/pexels-photo-2899839.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" },
+        { 4, "https://images.pexels.com/photos/3214241/pexels-photo-3214241.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" }
+    };
+    var taglines = new Dictionary<int, string>
+    {
+        { 1, "Little details that complete your look." },
+        { 2, "Delicate pieces made to shine." },
+        { 3, "Simple elegance for every moment." },
+        { 4, "Small details, beautiful impact." }
+    };
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Browse</p>
+            <h2 class="section-title">All Categories</h2>
+        </div>
+        <div class="row g-4">
+            @foreach (var cat in Model)
+            {
+                var img = categoryImages.ContainsKey(cat.CategoryID) ? categoryImages[cat.CategoryID] : "";
+                var tagline = taglines.ContainsKey(cat.CategoryID) ? taglines[cat.CategoryID] : "";
+                <div class="col-lg-3 col-md-6">
+                    <a asp-controller="Categories" asp-action="Details" asp-route-id="@cat.CategoryID" class="category-card">
+                        <div class="category-image" style="background-image: url('@img');"></div>
+                        <div class="category-body">
+                            <h3>@cat.CategoryName</h3>
+                            <p>@tagline</p>
+                            <p class="category-count">@cat.Products.Count products</p>
+                            <span class="category-link">Explore <i class="bi bi-arrow-right"></i></span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>

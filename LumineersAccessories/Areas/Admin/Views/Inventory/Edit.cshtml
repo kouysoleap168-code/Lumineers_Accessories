@@ -1,0 +1,18 @@
+@model LumineersAccessories.Models.Inventory
+@{
+    ViewData["Title"] = "Update Stock";
+}
+
+<div class="admin-panel">
+    <h3>Update Stock: @Model.Product?.ProductName</h3>
+    <p>Current stock: <strong>@Model.StockLevel</strong></p>
+    <form asp-action="Edit" asp-route-id="@Model.InventoryID" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label class="form-label">New Stock Level</label>
+            <input type="number" name="stockLevel" value="@Model.StockLevel" min="0" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary-soft">Update</button>
+        <a asp-action="Index" class="btn btn-outline-soft">Cancel</a>
+    </form>
+</div>

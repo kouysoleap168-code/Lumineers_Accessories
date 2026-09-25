@@ -1,0 +1,49 @@
+@model List<LumineersAccessories.Models.Wishlist>
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Saved for Later</p>
+            <h2 class="section-title">My Wishlist</h2>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <p class="text-center text-muted py-5">Your wishlist is empty. <a asp-controller="Products" asp-action="Index">Browse products</a> to add your favorites.</p>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    var product = item.Product;
+                    if (product == null) { continue; }
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID" class="product-image-link">
+                                <div class="product-image" style="background-image: url('@product.ImageUrl');"></div>
+                            </a>
+                            <div class="product-body">
+                                <h3 class="product-name"><a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID">@product.ProductName</a></h3>
+                                <div class="product-price">$@product.Price.ToString("0.00")</div>
+                                <div class="product-actions">
+                                    <form asp-controller="Wishlist" asp-action="MoveToCart" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary-soft btn-sm" title="Move to Cart"><i class="bi bi-bag-plus"></i></button>
+                                    </form>
+                                    <form asp-controller="Wishlist" asp-action="Remove" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-soft btn-sm" title="Remove"><i class="bi bi-heartbreak"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,26 @@
+@model int
+@{
+    var title = Model switch
+    {
+        404 => "Page Not Found",
+        403 => "Access Denied",
+        _ => "Something Went Wrong"
+    };
+    var message = Model switch
+    {
+        404 => "The page you are looking for might have been removed or is temporarily unavailable.",
+        403 => "You do not have permission to view this page.",
+        _ => "An unexpected error occurred. Please try again later."
+    };
+}
+@{
+    ViewData["Title"] = title;
+}
+<section class="error-page text-center py-5">
+    <div class="container py-5">
+        <h1 class="error-code">@Model</h1>
+        <h2 class="error-title">@title</h2>
+        <p class="error-message">@message</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary-soft mt-3">Back to Home</a>
+    </div>
+</section>

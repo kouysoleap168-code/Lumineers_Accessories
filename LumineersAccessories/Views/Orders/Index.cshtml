@@ -1,0 +1,41 @@
+@model List<LumineersAccessories.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">History</p>
+            <h2 class="section-title">My Orders</h2>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <p class="text-center text-muted py-5">You have no orders yet. <a asp-controller="Products" asp-action="Index">Start shopping</a>.</p>
+        }
+        else
+        {
+            <div class="lumineers-card">
+                <table class="table align-middle">
+                    <thead>
+                        <tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                                <td>@order.OrderItems.Sum(oi => oi.Quantity)</td>
+                                <td>$@order.TotalAmount.ToString("0.00")</td>
+                                <td><span class="badge bg-warning-soft">@order.Status</span></td>
+                                <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.OrderID" class="btn btn-sm btn-outline-soft">View</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>

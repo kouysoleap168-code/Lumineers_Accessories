@@ -1,0 +1,80 @@
+@model Product
+@{
+    ViewData["Title"] = Model.ProductName;
+    var related = ViewBag.RelatedProducts as List<Product> ?? new List<Product>();
+    var stock = Model.Inventory?.StockLevel ?? 0;
+}
+
+<section class="section product-details">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="product-image-large" style="background-image: url('@Model.ImageUrl');"></div>
+            </div>
+            <div class="col-lg-6">
+                <span class="product-category">@Model.Category?.CategoryName</span>
+                <h1 class="product-title">@Model.ProductName</h1>
+                <div class="product-rating mb-3">
+                    @for (int i = 0; i < Model.Rating; i++) { <i class="bi bi-star-fill"></i> }
+                    @for (int i = Model.Rating; i < 5; i++) { <i class="bi bi-star"></i> }
+                </div>
+                <div class="product-price-large">$@Model.Price.ToString("0.00")</div>
+                <p class="product-description">@Model.Description</p>
+
+                <div class="stock-info">
+                    @if (stock > 0)
+                    {
+                        <span class="badge bg-success-soft">In Stock (@stock available)</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger-soft">Out of Stock</span>
+                    }
+                </div>
+
+                <form asp-controller="Products" asp-action="AddToCart" asp-route-id="@Model.ProductID" method="post" class="product-buy-form mt-3">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <label class="form-label mb-0">Quantity</label>
+                        <input type="number" name="quantity" value="1" min="1" max="@stock" class="form-control quantity-input" />
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary-soft" disabled="@(stock == 0)">
+                            <i class="bi bi-bag-plus"></i> Add to Cart
+                        </button>
+                        <form asp-controller="Wishlist" asp-action="Add" asp-route-id="@Model.ProductID" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-soft"><i class="bi bi-heart"></i> Add to Wishlist</button>
+                        </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (related.Any())
+        {
+            <div class="related-products mt-5">
+                <div class="section-header text-center">
+                    <p class="section-eyebrow">You May Also Like</p>
+                    <h2 class="section-title">Related Products</h2>
+                </div>
+                <div class="row g-4">
+                    @foreach (var p in related)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            <div class="product-card">
+                                <a asp-controller="Products" asp-action="Details" asp-route-id="@p.ProductID" class="product-image-link">
+                                    <div class="product-image" style="background-image: url('@p.ImageUrl');"></div>
+                                </a>
+                                <div class="product-body">
+                                    <h3 class="product-name"><a asp-controller="Products" asp-action="Details" asp-route-id="@p.ProductID">@p.ProductName</a></h3>
+                                    <div class="product-price">$@p.Price.ToString("0.00")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

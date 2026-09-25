@@ -1,0 +1,19 @@
+@model LumineersAccessories.Models.Product
+@{
+    ViewData["Title"] = "Product Details";
+    var categories = ViewBag.Categories as List<LumineersAccessories.Models.Category> ?? new();
+}
+
+<div class="admin-panel">
+    <h3>Product Details</h3>
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt><dd class="col-sm-9">@Model.ProductID</dd>
+        <dt class="col-sm-3">Name</dt><dd class="col-sm-9">@Model.ProductName</dd>
+        <dt class="col-sm-3">Category</dt><dd class="col-sm-9">@Model.Category?.CategoryName</dd>
+        <dt class="col-sm-3">Price</dt><dd class="col-sm-9">$@Model.Price.ToString("0.00")</dd>
+        <dt class="col-sm-3">Rating</dt><dd class="col-sm-9">@Model.Rating / 5</dd>
+        <dt class="col-sm-3">Stock</dt><dd class="col-sm-9">@(Model.Inventory?.StockLevel ?? 0)</dd>
+        <dt class="col-sm-3">Description</dt><dd class="col-sm-9">@Model.Description</dd>
+    </dl>
+    <a asp-action="Index" class="btn btn-outline-soft">Back to List</a>
+</div>

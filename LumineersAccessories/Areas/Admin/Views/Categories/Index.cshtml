@@ -1,0 +1,31 @@
+@model List<LumineersAccessories.Models.Category>
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="admin-panel">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Categories</h3>
+        <a asp-action="Create" class="btn btn-primary-soft"><i class="bi bi-plus-lg"></i> Add Category</a>
+    </div>
+    <table class="table align-middle">
+        <thead><tr><th>ID</th><th>Name</th><th>Products</th><th>Actions</th></tr></thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.CategoryID</td>
+                    <td>@c.CategoryName</td>
+                    <td>@c.Products.Count</td>
+                    <td class="admin-actions">
+                        <a asp-action="Edit" asp-route-id="@c.CategoryID" class="btn btn-sm btn-outline-soft">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@c.CategoryID" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-link text-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

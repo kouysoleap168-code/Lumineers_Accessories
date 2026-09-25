@@ -1,0 +1,64 @@
+@model LumineersAccessories.Models.Order
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<section class="section confirmation-section">
+    <div class="container">
+        <div class="confirmation-card text-center">
+            <div class="confirmation-icon"><i class="bi bi-check-circle-fill"></i></div>
+            <h1 class="section-title">Thank You for Your Order!</h1>
+            <p class="text-muted">A confirmation email is on its way to @Model.Customer?.Email.</p>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-lg-8">
+                <div class="lumineers-card">
+                    <h4>Order #@Model.OrderID</h4>
+                    <p><strong>Date:</strong> @Model.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</p>
+                    <p><strong>Status:</strong> <span class="badge bg-warning-soft">@Model.Status</span></p>
+                    <hr />
+                    <h5>Products</h5>
+                    <table class="table table-sm">
+                        <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@item.Product?.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td>$@item.PricePerUnit.ToString("0.00")</td>
+                                    <td>$@((item.PricePerUnit * item.Quantity).ToString("0.00"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="summary-row total"><span>Total Amount</span><span>$@Model.TotalAmount.ToString("0.00")</span></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="lumineers-card">
+                    <h4>Shipping Address</h4>
+                    <p>@Model.Customer?.FullName</p>
+                    <p>@Model.ShippingDetail?.Address</p>
+                    <p>@Model.ShippingDetail?.City, @Model.ShippingDetail?.PostalCode</p>
+                    <hr />
+                    <h5>Tracking</h5>
+                    @if (!string.IsNullOrEmpty(Model.ShippingDetail?.TrackingNumber))
+                    {
+                        <p><strong>Tracking Number:</strong> @Model.ShippingDetail.TrackingNumber</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Tracking number will be added once your order ships.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary-soft">Continue Shopping</a>
+            <a asp-controller="Orders" asp-action="Index" class="btn btn-outline-soft">View Order History</a>
+        </div>
+    </div>
+</section>

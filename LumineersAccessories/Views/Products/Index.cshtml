@@ -1,0 +1,93 @@
+@model ProductFilterViewModel
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Collection</p>
+            <h2 class="section-title">Shop All Products</h2>
+        </div>
+
+        <!-- Filter bar -->
+        <form method="get" asp-controller="Products" asp-action="Index" class="filter-bar lumineers-card mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Search</label>
+                    <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Search products..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Category</label>
+                    <select name="categoryID" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.CategoryID" selected="@(Model.CategoryID == c.CategoryID)">@c.CategoryName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Min Price</label>
+                    <input type="number" name="minPrice" value="@Model.MinPrice" step="0.01" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Max Price</label>
+                    <input type="number" name="maxPrice" value="@Model.MaxPrice" step="0.01" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Sort</label>
+                    <select name="sort" class="form-select">
+                        <option value="newest" selected="@(Model.Sort == "newest")">Newest</option>
+                        <option value="price_asc" selected="@(Model.Sort == "price_asc")">Price Low to High</option>
+                        <option value="price_desc" selected="@(Model.Sort == "price_desc")">Price High to Low</option>
+                        <option value="popular" selected="@(Model.Sort == "popular")">Most Popular</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary-soft w-100">Go</button>
+                </div>
+            </div>
+        </form>
+
+        @if (!Model.Products.Any())
+        {
+            <p class="text-center text-muted py-5">No products match your filters. Try a different search.</p>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID" class="product-image-link">
+                                <div class="product-image" style="background-image: url('@product.ImageUrl');"></div>
+                            </a>
+                            <div class="product-body">
+                                <span class="product-category">@product.Category?.CategoryName</span>
+                                <h3 class="product-name"><a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID">@product.ProductName</a></h3>
+                                <div class="product-rating">
+                                    @for (int i = 0; i < product.Rating; i++) { <i class="bi bi-star-fill"></i> }
+                                    @for (int i = product.Rating; i < 5; i++) { <i class="bi bi-star"></i> }
+                                </div>
+                                <div class="product-price">$@product.Price.ToString("0.00")</div>
+                                <div class="product-actions">
+                                    <form asp-controller="Products" asp-action="AddToCart" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary-soft btn-sm"><i class="bi bi-bag-plus"></i></button>
+                                    </form>
+                                    <form asp-controller="Wishlist" asp-action="Add" asp-route-id="@product.ProductID" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-soft btn-sm"><i class="bi bi-heart"></i></button>
+                                    </form>
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.ProductID" class="btn btn-outline-soft btn-sm"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

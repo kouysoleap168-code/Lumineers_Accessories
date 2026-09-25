@@ -1,0 +1,26 @@
+@model List<LumineersAccessories.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="admin-panel">
+    <h3>All Orders</h3>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var o in Model)
+                {
+                    <tr>
+                        <td>@o.OrderID</td>
+                        <td>@o.Customer?.FullName</td>
+                        <td>@o.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td>$@o.TotalAmount.ToString("0.00")</td>
+                        <td><span class="badge bg-warning-soft">@o.Status</span></td>
+                        <td><a asp-action="Details" asp-route-id="@o.OrderID" class="btn btn-sm btn-outline-soft">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+@model LumineersAccessories.Models.Customer
+@{
+    ViewData["Title"] = "Customer Details";
+    var orders = ViewBag.Orders as List<LumineersAccessories.Models.Order> ?? new();
+}
+
+<div class="admin-panel">
+    <h3>Customer Details</h3>
+    <p><strong>Name:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Phone:</strong> @Model.Phone</p>
+    <hr />
+    <h5>Order History (@orders.Count orders)</h5>
+    @if (!orders.Any())
+    {
+        <p class="text-muted">This customer has no orders.</p>
+    }
+    else
+    {
+        <table class="table table-sm">
+            <thead><tr><th>Order #</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var o in orders)
+                {
+                    <tr>
+                        <td>@o.OrderID</td>
+                        <td>@o.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td>$@o.TotalAmount.ToString("0.00")</td>
+                        <td><span class="badge bg-warning-soft">@o.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <a asp-action="Index" class="btn btn-outline-soft mt-3">Back to Customers</a>
+</div>

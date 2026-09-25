@@ -1,0 +1,26 @@
+@model List<LumineersAccessories.ViewModels.CustomerWithOrderCountViewModel>
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="admin-panel">
+    <h3>Customers</h3>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>@c.CustomerID</td>
+                        <td>@c.FullName</td>
+                        <td>@c.Email</td>
+                        <td>@c.Phone</td>
+                        <td>@c.OrderCount</td>
+                        <td><a asp-action="Details" asp-route-id="@c.CustomerID" class="btn btn-sm btn-outline-soft">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

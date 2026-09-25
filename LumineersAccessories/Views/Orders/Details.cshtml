@@ -1,0 +1,51 @@
+@model LumineersAccessories.Models.Order
+@{
+    ViewData["Title"] = "Order #" + Model.OrderID;
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Order Details</p>
+            <h2 class="section-title">Order #@Model.OrderID</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="lumineers-card">
+                    <p><strong>Date:</strong> @Model.OrderDate.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</p>
+                    <p><strong>Status:</strong> <span class="badge bg-warning-soft">@Model.Status</span></p>
+                    <hr />
+                    <table class="table table-sm">
+                        <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@item.Product?.ProductName</td>
+                                    <td>@item.Quantity</td>
+                                    <td>$@item.PricePerUnit.ToString("0.00")</td>
+                                    <td>$@((item.PricePerUnit * item.Quantity).ToString("0.00"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="summary-row total"><span>Total</span><span>$@Model.TotalAmount.ToString("0.00")</span></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="lumineers-card">
+                    <h5>Shipping</h5>
+                    <p>@Model.Customer?.FullName</p>
+                    <p>@Model.ShippingDetail?.Address</p>
+                    <p>@Model.ShippingDetail?.City, @Model.ShippingDetail?.PostalCode</p>
+                    @if (!string.IsNullOrEmpty(Model.ShippingDetail?.TrackingNumber))
+                    {
+                        <p><strong>Tracking:</strong> @Model.ShippingDetail.TrackingNumber</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <a asp-controller="Orders" asp-action="Index" class="btn btn-outline-soft mt-3">Back to Orders</a>
+    </div>
+</section>

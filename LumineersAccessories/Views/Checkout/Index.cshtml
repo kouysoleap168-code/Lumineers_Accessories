@@ -1,0 +1,97 @@
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-header text-center">
+            <p class="section-eyebrow">Almost There</p>
+            <h2 class="section-title">Checkout</h2>
+        </div>
+
+        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="lumineers-card mb-4">
+                        <h4 class="card-section-title">Customer Information</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="FirstName" class="form-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lumineers-card">
+                        <h4 class="card-section-title">Shipping Address</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="Address" class="form-label"></label>
+                                <textarea asp-for="Address" class="form-control" rows="2"></textarea>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="City" class="form-label"></label>
+                                <input asp-for="City" class="form-control" />
+                                <span asp-validation-for="City" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="PostalCode" class="form-label"></label>
+                                <input asp-for="PostalCode" class="form-control" />
+                                <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="lumineers-card cart-summary">
+                        <h4>Order Summary</h4>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>Product</th><th>Qty</th><th>Price</th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ci in Model.CartItems)
+                                {
+                                    <tr>
+                                        <td>@ci.ProductName</td>
+                                        <td>@ci.Quantity</td>
+                                        <td>$@ci.Subtotal.ToString("0.00")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="summary-row"><span>Subtotal</span><span>$@Model.Subtotal.ToString("0.00")</span></div>
+                        <div class="summary-row"><span>Shipping</span><span>$@CheckoutViewModel.ShippingFee.ToString("0.00")</span></div>
+                        <hr />
+                        <div class="summary-row total"><span>Total</span><span>$@Model.Total.ToString("0.00")</span></div>
+                        <button type="submit" class="btn btn-primary-soft w-100 mt-3">Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

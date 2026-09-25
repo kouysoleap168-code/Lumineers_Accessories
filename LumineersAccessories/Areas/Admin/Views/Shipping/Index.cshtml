@@ -1,0 +1,26 @@
+@model List<LumineersAccessories.Models.ShippingDetail>
+@{
+    ViewData["Title"] = "Shipping";
+}
+
+<div class="admin-panel">
+    <h3>Shipping Details</h3>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Shipping ID</th><th>Order #</th><th>Customer</th><th>Address</th><th>Tracking</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.ShippingID</td>
+                        <td>@s.OrderID</td>
+                        <td>@s.Order?.Customer?.FullName</td>
+                        <td>@s.Address, @s.City, @s.PostalCode</td>
+                        <td>@(s.TrackingNumber ?? "—")</td>
+                        <td><a asp-action="Edit" asp-route-id="@s.ShippingID" class="btn btn-sm btn-outline-soft">Update Tracking</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

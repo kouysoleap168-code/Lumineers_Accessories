@@ -1,0 +1,38 @@
+@model List<LumineersAccessories.Models.Inventory>
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<div class="admin-panel">
+    <h3>Inventory Management</h3>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Product</th><th>Stock Level</th><th>Status</th><th>Last Updated</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td>@i.Product?.ProductName</td>
+                        <td>@i.StockLevel</td>
+                        <td>
+                            @switch (i.StockStatus)
+                            {
+                                case "Out of Stock":
+                                    <span class="badge bg-danger-soft">@i.StockStatus</span>
+                                    break;
+                                case "Low Stock":
+                                    <span class="badge bg-warning-soft">@i.StockStatus</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-success-soft">@i.StockStatus</span>
+                                    break;
+                            }
+                        </td>
+                        <td>@i.LastUpdated.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td><a asp-action="Edit" asp-route-id="@i.InventoryID" class="btn btn-sm btn-outline-soft">Update Stock</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
